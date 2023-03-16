@@ -4,9 +4,9 @@
       Welcome, {{ name }}
     </div>
     <input type="text" class="todo-input" placeholder="What needs to be done" v-model="newTodo" @keyup.enter="addTodo">
+
     <transition-group name="fade" enter-active-class="animated fadeInUp" leave-active-class="animated fadeOutDown">
-    <todo-item v-for="todo in todosFiltered" :key="todo.id" :todo="todo" :checkAll="!anyRemaining">
-    </todo-item>
+      <todo-item v-for="todo in todos" :key="todo.id" :todo="todo" :checkAll="!anyRemaining"></todo-item>
     </transition-group>
 
     <div class="extra-container">
@@ -19,7 +19,7 @@
 
       <div>
         <transition name="fade">
-        <todo-clear-completed></todo-clear-completed>
+          <todo-clear-completed></todo-clear-completed>
         </transition>
       </div>
     </div> <!-- end extra-container -->
@@ -45,6 +45,18 @@ export default {
   data() {
     return {
       newTodo: '',
+      todos: [
+        {
+          'id': 1,
+          'title': "test1",
+          'comleted': false
+        },
+        {
+          'id': 2,
+          'title': "test2",
+          'comleted': false
+        }
+      ],
       idForTodo: 3,
       name: '',
     }
@@ -70,11 +82,16 @@ export default {
         return
       }
 
-      this.$store.dispatch('addTodo', {
+      // this.$store.dispatch('addTodo', {
+      //   id: this.idForTodo,
+      //   title: this.newTodo,
+      // })
+      this.todos.push({
         id: this.idForTodo,
         title: this.newTodo,
+        completed: false
       })
-
+      
       this.newTodo = ''
       this.idForTodo++
     },
@@ -83,7 +100,6 @@ export default {
 </script>
 
 <style lang="scss">
-
 .todo-input {
   width: 100%;
   padding: 10px 18px;
@@ -106,6 +122,7 @@ export default {
 .remove-item {
   cursor: pointer;
   margin-left: 14px;
+
   &:hover {
     color: black;
   }
