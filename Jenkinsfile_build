@@ -1,6 +1,6 @@
 pipeline {
 
-    agent { label 'master' }
+    agent any
     
     options {
         buildDiscarder(logRotator(numToKeepStr: '10'))
@@ -10,6 +10,7 @@ pipeline {
     }
 
     environment {
+        DOCKERHUB_CREDENTIALS = credentials('dockerhub')
         DOCKER_REGISTRY = "vlemi"
         TAG = "latest"
     }
@@ -26,17 +27,20 @@ pipeline {
 
         stage('Build image') {
             steps {
-
-                sh 'docker build -t ${IMAGE_NAME}'
-
+                sh "docker build -t ${IMAGE_NAME} ."
+            }
+        }
+        
+        stage('Login') {
+            steps {
+                sh 'echo $DOCKERHUB_CREDENTIALS_PSW |docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
             }
         }
 
+
         stage('Push image') {
             steps {
-
-                sh 'docker push ${IMAGE_NAME}'
-
+                sh "docker push ${IMAGE_NAME}"
             }
         }
        
