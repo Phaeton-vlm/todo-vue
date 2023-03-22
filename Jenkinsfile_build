@@ -1,0 +1,49 @@
+pipeline {
+
+    agent { label "master" }
+
+    tools {
+        dockerTool 'docker' 
+    }
+    
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '10'))
+        disableConcurrentBuilds()
+        timestamps()
+        ansiColor('xtrem')
+    }
+
+    environment {
+        DOCKER_REGISTRY = "vlemi"
+        TAG = "latest"
+    }
+
+    stages {
+
+        stage('Prepare') {
+            steps {
+                script{
+                    IMAGE_NAME = "${DOCKER_REGISTRY}/todo-app:${TAG}"
+                }               
+            }
+        }
+
+        stage('Build') {
+            steps {
+
+                sh "docker build -t ${IMAGE_NAME}"
+
+            }
+        }
+
+         stage('Build') {
+            steps {
+
+                sh "docker push ${IMAGE_NAME}"
+
+            }
+        }
+       
+        
+    }
+}
