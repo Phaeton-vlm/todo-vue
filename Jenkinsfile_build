@@ -1,6 +1,6 @@
 pipeline {
 
-    agent { label "master" }
+    agent { label 'master' }
     
     options {
         buildDiscarder(logRotator(numToKeepStr: '10'))
@@ -27,7 +27,7 @@ pipeline {
         stage('Build image') {
             steps {
 
-                sh "docker build -t ${IMAGE_NAME}"
+                sh 'docker build -t ${IMAGE_NAME}'
 
             }
         }
@@ -35,7 +35,7 @@ pipeline {
         stage('Push image') {
             steps {
 
-                sh "docker push ${IMAGE_NAME}"
+                sh 'docker push ${IMAGE_NAME}'
 
             }
         }
