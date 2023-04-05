@@ -23,17 +23,11 @@ pipeline {
         stage('Prepare') {
             steps {
                 script{
-
                     println("BRANCH - ${BRANCH_NAME}")
-                    println("PRID - ${env.CHANGE_ID}")
+                    TAG = env.BUILD_NUMBER
+                    IMAGE_NAME = "${DOCKER_REGISTRY}/todo-app:0.${TAG}"
+                    L_IMAGE_NAME = "${DOCKER_REGISTRY}/todo-app:latest"
 
-                    if (BRANCH_NAME == 'master') {
-                        TAG = 'latest'
-                    } else {
-                        TAG = env.CHANGE_ID
-                    }
-
-                    IMAGE_NAME = "${DOCKER_REGISTRY}/todo-app:${TAG}"
                 }               
             }
         }
@@ -56,9 +50,24 @@ pipeline {
         stage('Push image') {
             when { expression { BRANCH_NAME == 'master'}}
             steps {
-                sh "docker push ${IMAGE_NAME}"
+                sh """
+                docker push ${IMAGE_NAME}
+                docker image tag ${IMAGE_NAME} ${L_IMAGE_NAME}
+                docker push ${L_IMAGE_NAME}
+                """
             }
         }     
         
+    }
+
+    post {
+        success {
+            script {
+                if (env.BRANCH_NAME == 'master')
+                {
+                    build job: 'App/ret', parameters: [string(name: 'D_TAG', value: TAG)]
+                }
+            }
+        }
     }
 }
