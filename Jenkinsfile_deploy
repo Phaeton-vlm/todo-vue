@@ -40,7 +40,7 @@ pipeline {
                 script {
                     sh """
                     kubectl apply -f deployment.yaml
-                    kubectl get svc
+                    kubectl set image deployment/todoapp-s tododapp=vlemi/todo-app:latest
                     """
                 }
             }
