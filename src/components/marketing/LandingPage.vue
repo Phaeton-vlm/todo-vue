@@ -1,5 +1,5 @@
 <template>
   <div class="page-wrapper flex-center">
-    12345
+    I am Batman
   </div>
 </template>
