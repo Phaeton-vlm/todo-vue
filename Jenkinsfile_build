@@ -13,6 +13,9 @@ pipeline {
         DOCKERHUB_CREDENTIALS = credentials('dockerhub')
         DOCKER_REGISTRY = "vlemi"
         TAG = "latest"
+        KUBECTL_HOME = tool name: 'kubectl', type: 'com.cloudbees.jenkins.plugins.customtools.CustomTool'
+        PATH = "${KUBECTL_HOME}:${env.PATH}"
+        KUBECONFIG = '/home/jenkins/.kube/config'
     }
 
     stages {
@@ -54,6 +57,20 @@ pipeline {
             when { expression { BRANCH_NAME == 'master'}}
             steps {
                 sh "docker push ${IMAGE_NAME}"
+            }
+        }
+
+        stage('Deploy image') {
+            when { expression { BRANCH_NAME == 'master'}}
+            steps {
+                script{
+                    if (KUBECONFIG != '')
+                    {
+                        sh """
+                        kubectl apply -f deployment.yaml
+                        """
+                    }
+                }
             }
         }
        
