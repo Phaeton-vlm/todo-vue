@@ -65,7 +65,7 @@ pipeline {
             script {
                 if (env.BRANCH_NAME == 'master')
                 {
-                    build job: 'App/ret', parameters: [string(name: 'D_TAG', value: TAG)]
+                    build job: 'App/Deploy', parameters: [string(name: 'D_TAG', value: TAG)]
                 }
             }
         }
