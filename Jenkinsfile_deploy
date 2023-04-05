@@ -39,8 +39,7 @@ pipeline {
             steps {
                 script {
                     sh """
-                    kubectl apply -f deployment.yaml
-                    kubectl set image deployment/todoapp-s tododapp=vlemi/todo-app:latest
+                    kubectl set image deployment/todoapp-s tododapp=vlemi/todo-app:0.${D_TAG}
                     """
                 }
             }
