@@ -1,5 +1,5 @@
 <template>
   <div class="page-wrapper flex-center">
-    Landing Page content here HELLO
+    12345
   </div>
 </template>
