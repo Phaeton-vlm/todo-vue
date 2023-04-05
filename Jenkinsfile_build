@@ -58,22 +58,7 @@ pipeline {
             steps {
                 sh "docker push ${IMAGE_NAME}"
             }
-        }
-
-        stage('Deploy image') {
-            when { expression { BRANCH_NAME == 'master'}}
-            steps {
-                script{
-                    if (KUBECONFIG != '')
-                    {
-                        sh """
-                        kubectl apply -f deployment.yaml
-                        """
-                    }
-                }
-            }
-        }
-       
+        }     
         
     }
 }
