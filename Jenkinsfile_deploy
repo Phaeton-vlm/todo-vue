@@ -25,9 +25,7 @@ pipeline {
             steps {
                 script {
                     sh """
-                    aws --version
                     aws eks update-kubeconfig --name demo-cluster
-                    cat /home/jenkins/.kube/config
                     export KUBECONFIG=${KUBECONFIG}
                     kubectl get nodes
                     """
@@ -38,9 +36,12 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    sh """
-                    kubectl set image deployment/todoapp-s tododapp=vlemi/todo-app:0.${D_TAG}
-                    """
+                    if (KUBECONFIG != '')
+                    {
+                        sh """
+                        kubectl set image deployment/todoapp-s tododapp=vlemi/todo-app:0.${D_TAG}
+                        """
+                    }
                 }
             }
         }
