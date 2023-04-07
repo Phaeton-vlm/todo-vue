@@ -24,11 +24,13 @@ pipeline {
         stage('Test') {
             steps {
                 script {
-                    sh """
-                    aws eks update-kubeconfig --name demo-cluster
-                    export KUBECONFIG=${KUBECONFIG}
-                    kubectl get nodes
-                    """
+                    catchError(buildResult: 'NOT_BUILT', message: 'Cluster not found', stageResult: 'NOT_BUILT') {
+                        sh """
+                        aws eks update-kubeconfig --name demo-cluster
+                        export KUBECONFIG=${KUBECONFIG}
+                        kubectl get nodes
+                        """
+                    }
                 }
             }
         }
@@ -36,8 +38,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    if (KUBECONFIG != '')
-                    {
+                    catchError(buildResult: 'NOT_BUILT', message: 'Cluster not found', stageResult: 'NOT_BUILT') {
                         sh """
                         kubectl set image deployment/todoapp-s tododapp=vlemi/todo-app:0.${D_TAG}
                         """
@@ -46,4 +47,13 @@ pipeline {
             }
         }
     }
+
+    post {
+        always {
+            emailext to: "${EMAIL}",
+            subject: "Jenkins",
+            body: "App updated",
+            attachLog: true
+        }
+    } 
 }
