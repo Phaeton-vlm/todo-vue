@@ -48,12 +48,12 @@ export default {
       todos: [
         {
           'id': 1,
-          'title': "test1",
+          'title': "Case 1",
           'comleted': false
         },
         {
           'id': 2,
-          'title': "test2",
+          'title': "Case 2",
           'comleted': false
         }
       ],
