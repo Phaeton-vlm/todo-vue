@@ -1,5 +1,5 @@
 <template>
   <div class="page-wrapper flex-center">
-    Home page
+    Test
   </div>
 </template>

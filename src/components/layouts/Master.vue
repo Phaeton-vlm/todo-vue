@@ -53,7 +53,7 @@ export default {
     padding: 15px 0;
     margin: 0;
     justify-content: flex-end;
-    background: #13c59bb1;
+    background: #acd212b1;
     border-bottom: 1px solid lightgrey;
     margin-bottom: 24px;
   }
