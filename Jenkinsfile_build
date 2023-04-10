@@ -33,7 +33,6 @@ pipeline {
         }
 
         stage('Build image') {
-            when { expression { BRANCH_NAME == 'master'}}
             steps {
                 sh "docker build -t ${IMAGE_NAME} ."
             }
